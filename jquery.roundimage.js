@@ -5,11 +5,12 @@
                 svgWidth = image.width(),
                 svgHeight = image.height(),
                 imgSrc = image.attr('src'),
+                radius = Math.min(image.width(), image.height()) / 2,
                 uniqId = function() {
                     return Math.round(new Date().getTime() + (Math.random() * 100));
                 },
                 svgClipPathId = uniqId();
-                image.replaceWith('<svg width="' + svgWidth + '" height="' + svgHeight + '"><clipPath id="' + svgClipPathId + '"><circle r="' + svgWidth/2 + '" cx="' + svgWidth/2 + '" cy="' + svgHeight/2 + '"/></clipPath><image clip-path="url(#' + svgClipPathId + ')" xlink:href="' + imgSrc + '" src="' + imgSrc + '" width="' + svgWidth + '" height="' + svgHeight + '"></image></svg>');
+                image.replaceWith('<svg width="' + svgWidth + '" height="' + svgHeight + '"><clipPath id="' + svgClipPathId + '"><circle r="' + radius + '" cx="' + svgWidth/2 + '" cy="' + svgHeight/2 + '"/></clipPath><image clip-path="url(#' + svgClipPathId + ')" xlink:href="' + imgSrc + '" src="' + imgSrc + '" width="' + svgWidth + '" height="' + svgHeight + '"></image></svg>');
         });
     };
 }(jQuery));
