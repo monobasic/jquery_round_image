@@ -1,13 +1,18 @@
 jQuery Round Image
 ==================
 
-This little plugin generates the popular clipped circle images (as example for avatar images) via javascript out of rectangle images.
-This works via a generated SVG Element and a Clipping Mask. The src attribute inside the svg provides backwards compatibility. (http://lynn.ru/examples/svg/en.html)
+- Checkout the included example.html!
 
-A way to use this is to add a class to all images on your site, that you want to replace with round ones and then call the script like a normal jQuery method like that:
+This little plugin generates the popular clipped circle images (as example for avatar images) via javascript out of rectangle images.
+It works with replacement of the image with a SVG element and a clipping mask. The src attribute inside the svg provides backwards compatibility for some older browsers. (http://lynn.ru/examples/svg/en.html) - if you need more, it should be ease to add a modernizr check and render a standard img tag for unsupported browsers.
+
+A way to use this is to add a class to all images on your site, that you want to replace and call the script like a normal jQuery method:
 
 <pre>
 $(document).ready(function() {
     $('.img-rounded').roundImage();
 });
 </pre>
+
+Please note that further chaining with other jQuery methods targets the svg element.
+
