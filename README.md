@@ -15,4 +15,4 @@ $(document).ready(function() {
 Please note:
 - You need to include the width and height attributes for the image and they need to be consitent to the actual image size
 - Checkout the included example.html
-- further chaining with other jQuery methods targets the svg element, not the original image
+- Further chaining with other jQuery methods targets the svg element, not the original image
