@@ -1,77 +1,70 @@
+/*
+    A hacked plugin that allows to create round images using SVG. 
+    The original source was not able to draw a border and hover.
+    See below for original source;
+    https://github.com/monobasic/jquery_round_image
+*/
 (function ($) {
-    $.fn.roundImage = function () {
-        var drawHover = function (borderHover, uniqId) {
-            var returnValue = '';
-
+    $.fn.roundImage = function (borderHover) {
+        var radius, imageWidth, imageHeight, bgColor, borderColor, borderWidth, uniqId, image, imgSrc, svg;
+        
+        function drawHover() {
             if (typeof borderHover !== 'undefined' && borderHover !== null && borderHover.replace(/^\s+|\s+$/g, '') != "") {
-                returnValue = '<style>/* <![CDATA[ */' +
+                svg += '<style>/* <![CDATA[ */' +
                                     'circle#circle_' + uniqId + ':hover {' +
                                         'stroke: ' + borderHover + ';' +
                                     '}' +
                                 '/* ]]> */</style>';
             }
+        }
 
-            return returnValue;
-        };
-
-        var drawBgColor = function (radius, imageWidth, imageHeight, bgColor) {
-            var returnValue = '';
-
-            if (typeof bgColor !== 'undefined' && bgColor !== null && bgColor.replace(/^\s+|\s+$/g, '') != "") {
-                returnValue = '<circle r="' + (radius - 2) + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 + '" fill="' + bgColor + '" />';
+        function drawBgColor() {
+            if (bgColor != 'transparent') {
+                svg += '<circle r="' + (radius - borderWidth) + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 + '" fill="' + bgColor + '" />';
             }
+        }
 
-            return returnValue;
-        };
-
-        var drawBorder = function (radius, imageWidth, imageHeight, borderColor, borderWidth, uniqId) {
-            var returnValue = '';
-
-            if (typeof borderColor !== 'undefined' && borderColor !== null && borderColor.replace(/^\s+|\s+$/g, '') != "" &&
-                typeof borderWidth !== 'undefined' && borderWidth !== null && borderWidth.toString().replace(/^\s+|\s+$/g, '') != "") {
-                returnValue = '<circle id="circle_' + uniqId + '" r="' + (radius - 2) + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 + '" stroke="' + borderColor + '" stroke-width="' + borderWidth + '" fill="transparent" />';
+        function drawBorder() {
+            if (borderWidth != 0) {
+                svg += '<circle id="circle_' + uniqId + '" r="' + (radius - borderWidth) + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 +
+                       '" stroke="' + borderColor + '" stroke-width="' + borderWidth + '" fill="transparent" />';
             }
+        }
 
-            return returnValue;
-        };
+        function drawImage() {
+            svg += '<image clip-path="url(#clippath_' + uniqId + ')" xlink:href="' + imgSrc + '" src="' + imgSrc +
+                   '" width="' + imageWidth + '" height="' + imageHeight + '" class="' + image.attr('class') + '"';
 
-        var drawImage = function (radius, imageWidth, imageHeight, borderColor, borderWidth, borderHover, uniqId, imgSrc) {
-            var returnValue = '<image clip-path="url(#clippath_' + uniqId + ')" xlink:href="' + imgSrc + '" src="' + imgSrc + '" width="' + imageWidth + '" height="' + imageHeight + '" ';
-
-            if (typeof borderColor !== 'undefined' && borderColor !== null && borderColor.replace(/^\s+|\s+$/g, '') != "" &&
-                typeof borderWidth !== 'undefined' && borderWidth !== null && borderWidth.toString().replace(/^\s+|\s+$/g, '') != "") {
-                returnValue += 'style="border:' + borderWidth + 'px solid ' + borderColor + '" ';
-            }
             if (typeof borderHover !== 'undefined' && borderHover !== null && borderHover.replace(/^\s+|\s+$/g, '') != "") {
-                returnValue += ' onmouseover="this.style.borderColor=\'' + borderHover + '\';" onmouseout="this.style.borderColor=\'' + borderColor + '\';"';
+                svg += ' onmouseover="this.style.borderColor=\'' + borderHover + '\';" onmouseout="this.style.borderColor=\'' + borderColor + '\';"';
             }
 
-            return returnValue + '></image>';
-        };
+            svg += '></image>';
+        }
 
-        var drawClipPath = function (radius, imageWidth, imageHeight, uniqId) {
-            return '<clipPath id="clippath_' + uniqId + '">' +
-                        '<circle r="' + (radius - 2) + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 + '" />' +
+        function drawClipPath() {
+            svg += '<clipPath id="clippath_' + uniqId + '">' +
+                        '<circle r="' + (radius - borderWidth) + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 + '"  />' +
                    '</clipPath>';
-        };
+        }
 
         return this.each(function () {
-            var image = $(this),
-                imageWidth = image.width(),
-                imageHeight = image.height(),
-                imgSrc = image.attr('src'),
-                radius = Math.min(imageWidth, imageHeight) / 2,
-                bgColor = image.data("bg-color"),
-                borderColor = image.data("stroke"),
-                borderWidth = image.data("stroke-width"),
-                borderHover = image.data("stroke-hover"),
-                svg = '<svg width="' + imageWidth + '" height="' + imageHeight + '">',
-                uniqId = Math.round(new Date().getTime() + (Math.random() * 100));
+            image = $(this);
+            bgColor = image.css("background-color");
+            borderColor = image.css("border-left-color");
+            borderWidth = parseInt(image.css("border-left-width"));
+            imageWidth = image.width() + borderWidth * 2;
+            imageHeight = image.height() + borderWidth * 2;
+            imgSrc = image.attr('src');
+            radius = Math.min(imageWidth, imageHeight) / 2;
+            svg = '<svg width="' + imageWidth + '" height="' + imageHeight + '">';
+            uniqId = Math.round(new Date().getTime() + (Math.random() * 100));
 
-            svg += drawHover(borderHover, uniqId) + drawBgColor(radius, imageWidth, imageHeight, bgColor) +
-                   drawClipPath(radius, imageWidth, imageHeight, uniqId) +
-                   drawImage(radius, imageWidth, imageHeight, borderColor, borderWidth, borderHover, uniqId, imgSrc) +
-                   drawBorder(radius, imageWidth, imageHeight, borderColor, borderWidth, uniqId);
+            drawHover();
+            drawBgColor();
+            drawClipPath();
+            drawImage();
+            drawBorder();
 
             image.replaceWith(svg + '</svg>');
         });
