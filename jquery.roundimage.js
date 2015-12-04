@@ -20,13 +20,13 @@
 
         function drawBgColor() {
             if (bgColor != 'transparent') {
-                svg += '<circle r="' + (radius - borderWidth) + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 + '" fill="' + bgColor + '" />';
+                svg += '<circle r="' + (radius - borderWidth / 2 - 1) + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 + '" fill="' + bgColor + '" />';
             }
         }
 
         function drawBorder() {
             if (borderWidth != 0) {
-                svg += '<circle id="circle_' + uniqId + '" r="' + (radius - borderWidth) + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 +
+                svg += '<circle id="circle_' + uniqId + '" r="' + (radius - borderWidth / 2 - 1) + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 +
                        '" stroke="' + borderColor + '" stroke-width="' + borderWidth + '" fill="transparent" />';
             }
         }
@@ -44,7 +44,7 @@
 
         function drawClipPath() {
             svg += '<clipPath id="clippath_' + uniqId + '">' +
-                        '<circle r="' + (radius - borderWidth) + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 + '"  />' +
+                        '<circle r="' + radius + '" cx="' + imageWidth / 2 + '" cy="' + imageHeight / 2 + '"  />' +
                    '</clipPath>';
         }
 
